@@ -32,11 +32,11 @@ public class ProveedoresDAO {
         }
     }
     
-       public boolean eliminarProveedor(String cuit){
+       public boolean eliminarProveedor(String Cuit){
         String sql = "DELETE FROM proveedores WHERE Cuit=?";
         try {
             ps = con.prepareStatement(sql);
-            ps.setString(Cuit);
+            ps.setString(1,Cuit);
             ps.execute();
             return true;
         } catch (SQLException e) {
@@ -65,5 +65,22 @@ public class ProveedoresDAO {
             System.out.println(e.toString());
         }
         return listaPr;
+    }
+    
+    public boolean modificarProveedor(Proveedores pr){
+        String sql = "UPDATE proveedores SET Nombre=?, Telefono=?, Direccion=?, RazonSocial=? WHERE Cuit=?";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(0,pr.getNombre());
+            ps.setString(1, pr.getTelefono());
+            ps.setString(2, pr.getDireccion());
+            ps.setString(3, pr.getRazonSocial());
+            ps.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+            return false;
+        }
+        
     }
 }

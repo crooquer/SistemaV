@@ -12,6 +12,11 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Proveedores;
 import modelo.ProveedoresDAO;
+import modelo.Productos;
+import modelo.ProductosDAO;
+import modelo.Ventas;
+import modelo.VentasDAO;
+import reportes.Excel;
 
 /**
  *
@@ -25,8 +30,12 @@ public class MainForm extends javax.swing.JFrame {
     
     Cliente cl = new Cliente();
     ClienteDAO client = new ClienteDAO();
-    Proveedores pr = new Proveedores();
+    Proveedores prov = new Proveedores();
     ProveedoresDAO prDAO = new ProveedoresDAO();
+    Productos prod = new Productos();
+    ProductosDAO produc = new ProductosDAO();
+    Ventas vent = new Ventas();
+    VentasDAO venta = new VentasDAO();
     DefaultTableModel modelo = new DefaultTableModel(); 
     
     public MainForm() {
@@ -65,6 +74,35 @@ public class MainForm extends javax.swing.JFrame {
         tableProveedor.setModel(modelo);
     }
     
+    public void listarProductos(){
+        List<Productos> listarProd = produc.listarProducto();
+        modelo = (DefaultTableModel) TableProductos.getModel();
+        Object[] ob = new Object[5];
+        for (int i=0; i<listarProd.size();i++){
+            ob[0] = listarProd.get(i).getCodigo();
+            ob[1] = listarProd.get(i).getDescripcion();
+            ob[2] = listarProd.get(i).getStock();
+            ob[3] = listarProd.get(i).getPrecio();
+            ob[4] = listarProd.get(i).getProveedor();
+            modelo.addRow(ob);
+        }
+        TableProductos.setModel(modelo);
+    }
+    
+    public void listarVentas(){
+        List<Ventas> listarVen = venta.listarVentas();
+        modelo = (DefaultTableModel) TableVentas.getModel();
+        Object[] ob = new Object[4];
+        for (int i=0; i<listarVen.size();i++){
+            ob[0] = listarVen.get(i).getID();
+            ob[1] = listarVen.get(i).getCliente();
+            ob[2] = listarVen.get(i).getVendedor();
+            ob[3] = listarVen.get(i).getTotal();
+            modelo.addRow(ob);
+        }
+        TableVentas.setModel(modelo);
+    }
+    
       public void limpiarTable(){
         for (int i=0; i < modelo.getRowCount(); i++){
             modelo.removeRow(i);
@@ -83,7 +121,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnMenuNuevaVenta = new javax.swing.JButton();
         btnMenuProveedores = new javax.swing.JButton();
         btnMenuProductos = new javax.swing.JButton();
         btnMenuClientes = new javax.swing.JButton();
@@ -187,7 +225,7 @@ public class MainForm extends javax.swing.JFrame {
         jTextField20 = new javax.swing.JTextField();
         jTextField21 = new javax.swing.JTextField();
         jTextField22 = new javax.swing.JTextField();
-        jButton22 = new javax.swing.JButton();
+        btnActualizarVentas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -197,12 +235,12 @@ public class MainForm extends javax.swing.JFrame {
         jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Nventa.png"))); // NOI18N
-        jButton1.setText("Nueva venta");
-        jButton1.setMargin(new java.awt.Insets(3, 14, 3, 14));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnMenuNuevaVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Nventa.png"))); // NOI18N
+        btnMenuNuevaVenta.setText("Nueva venta");
+        btnMenuNuevaVenta.setMargin(new java.awt.Insets(3, 14, 3, 14));
+        btnMenuNuevaVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnMenuNuevaVentaActionPerformed(evt);
             }
         });
 
@@ -240,6 +278,11 @@ public class MainForm extends javax.swing.JFrame {
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/config.png"))); // NOI18N
         jButton6.setText("Config");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/encabezado.png"))); // NOI18N
@@ -300,6 +343,11 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/print.png"))); // NOI18N
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/money.png"))); // NOI18N
         jLabel10.setText("Total a pagar");
@@ -789,7 +837,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel27.setText("Descripcion");
 
-        jLabel28.setText("Cantidad");
+        jLabel28.setText("Stock");
         jLabel28.setToolTipText("");
 
         jLabel29.setText("Proveedor");
@@ -802,6 +850,11 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         btnActualizarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Actualizar (2).png"))); // NOI18N
+        btnActualizarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarProductoActionPerformed(evt);
+            }
+        });
 
         btnEliminarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/eliminar.png"))); // NOI18N
         btnEliminarProducto.setVerifyInputWhenFocusTarget(false);
@@ -812,6 +865,11 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         jButton20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nuevo.png"))); // NOI18N
+        jButton20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton20ActionPerformed(evt);
+            }
+        });
 
         txtCodigoProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -848,6 +906,11 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         btnEcxel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/excel.png"))); // NOI18N
+        btnEcxel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEcxelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -1031,8 +1094,13 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        jButton22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Actualizar (2).png"))); // NOI18N
-        jButton22.setText("Actualizar");
+        btnActualizarVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Actualizar (2).png"))); // NOI18N
+        btnActualizarVentas.setText("Actualizar");
+        btnActualizarVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarVentasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1062,7 +1130,7 @@ public class MainForm extends javax.swing.JFrame {
                         .addGap(67, 67, 67))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton22)
+                            .addComponent(btnActualizarVentas)
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel17)
                                 .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1093,7 +1161,7 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                .addComponent(jButton22)
+                .addComponent(btnActualizarVentas)
                 .addGap(42, 42, 42))
         );
 
@@ -1146,7 +1214,7 @@ public class MainForm extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnMenuProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnMenuNuevaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnMenuClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnMenuVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1161,7 +1229,7 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMenuNuevaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMenuClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1194,14 +1262,17 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnMenuProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuProveedoresActionPerformed
         // TODO add your handling code here:
+         limpiarTable();
+         listarProveedor();
     }//GEN-LAST:event_btnMenuProveedoresActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnMenuNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuNuevaVentaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnMenuNuevaVentaActionPerformed
 
     private void btnMenuClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuClientesActionPerformed
         // TODO add your handling code here:
+       
         limpiarTable();
         listarCliente();
         //tableCliente.setSelectedIndex(1);
@@ -1209,10 +1280,14 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnMenuVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuVentasActionPerformed
         // TODO add your handling code here:
+         limpiarTable();
+         listarVentas();
     }//GEN-LAST:event_btnMenuVentasActionPerformed
 
     private void btnMenuProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuProductosActionPerformed
         // TODO add your handling code here:
+         limpiarTable();
+         //listarProducto();
     }//GEN-LAST:event_btnMenuProductosActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
@@ -1258,7 +1333,7 @@ public class MainForm extends javax.swing.JFrame {
             if (!"".equals(txtDNICliente.getText()) 
                 || !"".equals(txtNombreCliente.getText()) || !"".equals(txtTelefonoCliente.getText())
                 || !"".equals(txtDireccionCliente.getText())) {
-                cl.setDni(txtDNICliente.getText());
+                cl.setDni(Integer.parseInt(txtDNICliente.getText()));
                 cl.setNombre(txtNombreCliente.getText());
                 cl.setTelefono(txtTelefonoCliente.getText());
                 cl.setDireccion(txtDireccionCliente.getText());
@@ -1278,12 +1353,15 @@ public class MainForm extends javax.swing.JFrame {
     private void btnGuardarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarProveedorActionPerformed
             // TODO add your handling code here:
             if(!"".equals(txtCuitProveedor.getText()) || !"".equals(txtNombreProveedor.getText()) || !"".equals(txtTelefonoProveedor.getText()) || !"".equals(txtDireccionProveedor.getText()) || !"".equals(txtRazonSocialProveedor.getText())){
-                pr.setCuit(txtCuitProveedor.getText());
-                pr.setNombre(txtNombreProveedor.getText());
-                pr.setTelefono(txtTelefonoProveedor.getText());
-                pr.setDireccion(txtDireccionProveedor.getText());
-                pr.setRazonSocial(txtRazonSocialProveedor.getText());
-                prDAO.registrarProveedor(pr);
+                prov.setCuit(txtCuitProveedor.getText());
+                prov.setNombre(txtNombreProveedor.getText());
+                prov.setTelefono(txtTelefonoProveedor.getText());
+                prov.setDireccion(txtDireccionProveedor.getText());
+                prov.setRazonSocial(txtRazonSocialProveedor.getText());
+                prDAO.registrarProveedor(prov);
+                limpiarTable();
+                limpiarProveedor();
+                listarProveedor();
             }else{
                 JOptionPane.showMessageDialog(null, "LOS CAMPOS ESTAN VACIOS!!!");
                 
@@ -1304,12 +1382,14 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnEliminarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProveedorActionPerformed
         // TODO add your handling code here:
+        
         if (!"".equals(txtCuitProveedor.getText())){
             int pregunta = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea eliminar al proveedor?");
             String Cuit = (txtNombreProveedor.getText());
             if (pregunta == 0){
-              
+                prDAO.eliminarProveedor(Cuit);              
                 limpiarTable();
+                limpiarProveedor();
                 listarProveedor();
                 
             }
@@ -1322,10 +1402,38 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnGuardarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarProductoActionPerformed
         // TODO add your handling code here:
+         if (!"".equals(txtCodigoProducto.getText()) 
+                || !"".equals(txtDescripcionProducto.getText()) || !"".equals(txtDescripcionProducto.getText())
+                || !"".equals(txtPrecioProducto.getText())){
+                prod.setCodigo(Integer.parseInt(txtCodigoProducto.getText()));
+                prod.setDescripcion(txtDescripcionProducto.getText());
+                prod.setStock(Integer.parseInt(txtCantidadProducto.getText()));
+                //prod.setPrecio(float(txtPrecioProducto.getText()));
+                produc.registrarProducto(prod);
+                limpiarTable();
+                listarProductos();
+                JOptionPane.showMessageDialog(null, "Producto registrado");           
+            }else{
+                JOptionPane.showMessageDialog(null, "Los campos están vacíos");           
+            }
     }//GEN-LAST:event_btnGuardarProductoActionPerformed
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:        
+        
+        if (!"".equals(txtCodigoProducto.getText())){
+            int pregunta = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea eliminar el producto?");
+            int Codigo = (Integer.parseInt(txtDescripcionProducto.getText()));
+            if (pregunta == 0){
+                produc.eliminarProducto(Codigo);
+                limpiarTable();
+                limpiarProducto();
+                listarProductos();
+                
+                
+            }
+        }
+        
     }//GEN-LAST:event_btnEliminarProductoActionPerformed
 
     private void txtCodigoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoProductoActionPerformed
@@ -1384,6 +1492,29 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnActualizarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarProveedorActionPerformed
         // TODO add your handling code here:
+        if ("".equals(txtCuitProveedor.getText())) {
+            JOptionPane.showMessageDialog(null, "Seleccione un proveedor para actualizar");
+            
+        } else {
+            
+            if(!"".equals(txtCuitProveedor.getText())||
+                    !"".equals(txtNombreProveedor.getText())||
+                    !"".equals(txtTelefonoProveedor.getText())||
+                    !"".equals(txtRazonSocialProveedor.getText())||
+                    !"".equals(txtCuitProveedor.getText())){
+                
+                prov.setCuit(txtCuitProveedor.getText());
+                prov.setNombre(txtNombreProveedor.getText());
+                prov.setTelefono(txtTelefonoCliente.getText());
+                prov.setDireccion(txtDireccionProveedor.getText());
+                prov.setRazonSocial(txtRazonSocialProveedor.getText());
+                limpiarTable();
+                limpiarProveedor();
+            }else{
+                JOptionPane.showMessageDialog(null, "No puede haber campos vacíos");
+            }
+            
+        }
     }//GEN-LAST:event_btnActualizarProveedorActionPerformed
 
     private void btnActualizarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarClienteActionPerformed
@@ -1401,7 +1532,8 @@ public class MainForm extends javax.swing.JFrame {
                     !"".equals(txtDNICliente.getText())){
                 cl.setDni(Integer.parseInt(txtDNICliente.getText()));
                 cl.setNombre(txtNombreCliente.getText());
-                cl.setTelefono(txtTelefonoCliente.getText()));
+                cl.setTelefono(txtTelefonoCliente.getText());
+                //cl.setTelefono(Integer.parseInt(txtTelefonoCliente.getText()));
                 cl.setDireccion(txtDireccionCliente.getText());
                 cl.setRazon(txtRazonSocialCliente.getText());
                 client.modificarCliente(cl);
@@ -1433,6 +1565,54 @@ public class MainForm extends javax.swing.JFrame {
         txtDireccionCliente.setText(tableCliente.getValueAt(fila, 3).toString());
         txtRazonSocialCliente.setText(tableCliente.getValueAt(fila, 4).toString());
     }//GEN-LAST:event_tableClienteMouseClicked
+
+    private void btnActualizarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarProductoActionPerformed
+        // TODO add your handling code here:
+        if ("".equals(txtCodigoProducto.getText())) {
+            JOptionPane.showMessageDialog(null, "Seleccione un proveedor para actualizar");
+            
+        } else {
+            
+            if(!"".equals(txtCodigoProducto.getText())||
+                    !"".equals(txtDescripcionProducto.getText())||
+                    !"".equals(txtCantidadProducto.getText())||
+                    !"".equals(txtPrecioProducto.getText())){
+                
+                
+                    prod.setCodigo(Integer.parseInt(txtCodigoProducto.getText()));
+                    prod.setDescripcion(txtCodigoProducto.getText());
+                    prod.setStock(Integer.parseInt(txtCantidadProducto.getText()));
+                    prod.setPrecio(Float.parseFloat(txtCantidadProducto.getText()));
+                    limpiarTable();
+                    listarProductos();
+                    limpiarProducto();
+            }else{
+                JOptionPane.showMessageDialog(null, "No puede haber campos vacíos");
+            }
+            
+        }
+    }//GEN-LAST:event_btnActualizarProductoActionPerformed
+
+    private void btnEcxelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEcxelActionPerformed
+        // TODO add your handling code here:
+        Excel.reporte();
+    }//GEN-LAST:event_btnEcxelActionPerformed
+
+    private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton20ActionPerformed
+
+    private void btnActualizarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarVentasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnActualizarVentasActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1476,6 +1656,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton btnActualizarCliente;
     private javax.swing.JButton btnActualizarProducto;
     private javax.swing.JButton btnActualizarProveedor;
+    private javax.swing.JButton btnActualizarVentas;
     private javax.swing.JToggleButton btnEcxel;
     private javax.swing.JButton btnEliminarCliente;
     private javax.swing.JButton btnEliminarProducto;
@@ -1485,14 +1666,13 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardarProveedor;
     private javax.swing.JButton btnLimpiarCliente;
     private javax.swing.JButton btnMenuClientes;
+    private javax.swing.JButton btnMenuNuevaVenta;
     private javax.swing.JButton btnMenuProductos;
     private javax.swing.JButton btnMenuProveedores;
     private javax.swing.JButton btnMenuVentas;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton20;
     private javax.swing.JButton jButton21;
-    private javax.swing.JButton jButton22;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
@@ -1586,4 +1766,22 @@ public class MainForm extends javax.swing.JFrame {
          txtDireccionCliente.setText("");
          txtRazonSocialCliente.setText("");
     }
+    
+    private void limpiarProducto(){
+         txtCodigoProducto.setText("");
+         txtDescripcionProducto.setText("");
+         txtCantidadProducto.setText("");
+         txtPrecioProducto.setText("");
+         //ComboBoxProveedorDelProducto.setText("");
+    }
+    
+    private void limpiarProveedor(){
+         txtCuitProveedor.setText("");
+         txtNombreProveedor.setText("");
+         txtTelefonoProveedor.setText("");
+         txtDireccionProveedor.setText("");
+         txtRazonSocialProveedor.setText("");
+    }
+
+
 }

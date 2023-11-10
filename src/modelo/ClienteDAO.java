@@ -43,7 +43,7 @@ public class ClienteDAO {
     
     public List listarCliente(){
         List<Cliente> ListaCl = new ArrayList();
-        String sql = "SELECT * FROM clientes ";
+        String sql = "SELECT * FROM clientes";
         try {
             con = cn.getConexion();
             ps = con.prepareStatement(sql);
