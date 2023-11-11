@@ -90,7 +90,7 @@ public class MainForm extends javax.swing.JFrame {
     }
     
     public void listarVentas(){
-        List<Ventas> listarVen = venta.listarVentas();
+        List<Ventas> listarVen = venta.Listarventas();
         modelo = (DefaultTableModel) TableVentas.getModel();
         Object[] ob = new Object[4];
         for (int i=0; i<listarVen.size();i++){

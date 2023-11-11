@@ -1562,7 +1562,7 @@
                                               <Component id="jTextField19" min="-2" pref="120" max="-2" attributes="0"/>
                                               <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace pref="55" max="32767" attributes="0"/>
+                                          <EmptySpace pref="204" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
                                               <Component id="jTextField20" min="-2" pref="120" max="-2" attributes="0"/>
