@@ -2,6 +2,7 @@ package modelo;
 
 
 public class Proveedores {
+    private int ID;
     private String Cuit;
     private String Nombre;
     private String Telefono;
@@ -11,12 +12,21 @@ public class Proveedores {
     public Proveedores() {
     }
 
-    public Proveedores(String Cuit, String Nombre, String Telefono, String Direccion, String RazonSocial) {
+    public Proveedores(int ID, String Cuit, String Nombre, String Telefono, String Direccion, String RazonSocial) {
+        this.ID = ID;
         this.Cuit = Cuit;
         this.Nombre = Nombre;
         this.Telefono = Telefono;
         this.Direccion = Direccion;
         this.RazonSocial = RazonSocial;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getCuit() {
@@ -58,6 +68,6 @@ public class Proveedores {
     public void setRazonSocial(String RazonSocial) {
         this.RazonSocial = RazonSocial;
     }
-    
-    
+
+  
 }

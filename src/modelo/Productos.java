@@ -1,6 +1,7 @@
 package modelo;
 
 public class Productos {
+    private int ID;
     private int Codigo;
     private String Descripcion;
     private int Stock;
@@ -9,13 +10,22 @@ public class Productos {
 
     public Productos() {
     }
-    
-     public Productos(int Codigo, String Descripcion, int Stock, float Precio, String Proveedor) {
+
+    public Productos(int ID, int Codigo, String Descripcion, int Stock, float Precio, String Proveedor) {
+        this.ID = ID;
         this.Codigo = Codigo;
         this.Descripcion = Descripcion;
         this.Stock = Stock;
         this.Precio = Precio;
         this.Proveedor = Proveedor;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public int getCodigo() {

@@ -23,7 +23,7 @@ public class ClienteDAO {
     ResultSet rs;
     
     public boolean registrarCliente(Cliente cl){
-        String sql = "INSERT INTO clientes (Dni, Nombre, Telefno, Direccion, Razon)VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO clientes (Dni, Nombre, Telefono, Direccion, Razon)VALUES (?,?,?,?,?)";
         
         try {
             con = cn.getConexion();
@@ -92,7 +92,14 @@ public class ClienteDAO {
         } catch (SQLException e) {
             System.out.println(e.toString());
             return false;
-        }
+        }finally{
+           try {
+               con.close();
+           } catch (SQLException e) {
+               System.out.println(e.toString());
+           }
+       }
         
     }
+     
 }
